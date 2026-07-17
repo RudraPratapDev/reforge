@@ -98,6 +98,10 @@ func marshalBulkString(v Value) []byte {
 func marshalArray(v Value) []byte {
 	var buf bytes.Buffer
 	buf.WriteByte(byte(v.Type))
+	if v.IsNull {
+		buf.WriteString("-1\r\n")
+		return buf.Bytes()
+	}
 	lengthArr := len(v.Array)
 	buf.WriteString(strconv.FormatInt(int64(lengthArr), 10))
 	buf.WriteString("\r\n")
