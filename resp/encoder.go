@@ -1,8 +1,7 @@
-package main
+package resp
 
 import (
 	"bytes"
-	"fmt"
 	"strconv"
 )
 
@@ -110,50 +109,4 @@ func marshalArray(v Value) []byte {
 	}
 
 	return buf.Bytes()
-}
-
-// todo have separate test for encoder
-func main() {
-	v1 := Value{
-		Type: SimpleString,
-		Str:  "OK",
-	}
-
-	v2 := Value{
-		Type: SimpleError,
-		Str:  "CTRL",
-	}
-	v3 := Value{
-		Type: Integer,
-		Num:  -111111,
-	}
-
-	v4 := Value{
-		Type: BulkString,
-		Str:  "",
-	}
-	v5 := Value{
-		Type:   BulkString,
-		IsNull: true,
-	}
-	v6 := Value{
-		Type: Array,
-		Array: []Value{
-			{
-				Type: BulkString,
-				Str:  "GET",
-			},
-			{
-				Type: BulkString,
-				Str:  "age",
-			},
-		},
-	}
-
-	fmt.Printf("%q\n", v1.Marshal())
-	fmt.Printf("%q\n", v2.Marshal())
-	fmt.Printf("%q\n", v3.Marshal())
-	fmt.Printf("%q\n", v4.Marshal())
-	fmt.Printf("%q\n", v5.Marshal())
-	fmt.Printf("%q\n", v6.Marshal())
 }
