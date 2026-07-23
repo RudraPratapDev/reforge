@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -36,10 +37,18 @@ func (s *server) start() error {
 	return nil
 }
 
+func (s *server) Shutdown() {
+	close(s.quitCh)
+	s.ln.Close()
+}
+
 func (s *server) acceptLoop() {
 	for {
 		conn, err := s.ln.Accept()
 		if err != nil {
+			if errors.Is(err, net.ErrClosed) {
+				return
+			}
 			log.Printf("accept error: %v", err)
 			continue
 		}
