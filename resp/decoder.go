@@ -2,10 +2,10 @@ package resp
 
 import (
 	"bufio"
-
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
 )
 
 type Decoder struct {
@@ -45,7 +45,11 @@ func (d *Decoder) readLine() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return str[:len(str)-2], err
+
+	if !strings.HasSuffix(str, "\r\n") {
+		return "", fmt.Errorf("Invalid input")
+	}
+	return str[:len(str)-2], nil
 }
 
 func (d *Decoder) parseSimpleString() (Value, error) {
@@ -56,7 +60,7 @@ func (d *Decoder) parseSimpleString() (Value, error) {
 		return v, err
 	}
 	v.Str = str
-	return v, err
+	return v, nil
 
 }
 
@@ -68,7 +72,7 @@ func (d *Decoder) parseSimpleError() (Value, error) {
 		return v, err
 	}
 	v.Str = str
-	return v, err
+	return v, nil
 
 }
 
@@ -84,7 +88,7 @@ func (d *Decoder) parseInteger() (Value, error) {
 		return v, err
 	}
 	v.Num = num
-	return v, err
+	return v, nil
 }
 
 func (d *Decoder) parseBulkString() (Value, error) {
